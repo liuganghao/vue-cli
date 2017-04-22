@@ -15,12 +15,19 @@ const expect = require('chai').expect,
 
   const input = fs.readFileSync('./test.jdl', 'utf-8').toString();
   const content = parse(input);
-
+  //console.log(JSON.stringify(content));
 
   content.entities.forEach(function(entity) {
-  console.log("start generate  "+entity.name);
+  //console.log("start generate  "+entity.name);
 
-  var str = "<% if (entity) { %>  <h2><%= entity.name %>:<%= JSON.stringify(entity.body) %></h2><% } %>";
+
+  var str = "class <%= entity.name %>{"+
+  "<%for (var index = 0; index < entity.body.length; index++) {"+
+     "var property = entity.body[index];%>"+
+      " <%= property.name%>:<%=property.type%> //property"+
+    "<%}"+
+  "%>}";
+
   var entityjsfile = ejs.render(str, {entity:entity});
   console.log(entityjsfile);
   }, this);
