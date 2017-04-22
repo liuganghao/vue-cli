@@ -5,6 +5,7 @@
  */
 
 var program = require('commander')
+var ejs = require('ejs')
 const expect = require('chai').expect,
   fs = require('fs'),
   fail = expect.fail,
@@ -16,8 +17,13 @@ const expect = require('chai').expect,
   const content = parse(input);
 
 
-  content.entities.forEach(function(element) {
-    console.log(element.name);
+  content.entities.forEach(function(entity) {
+  console.log("start generate  "+entity.name);
+
+  var str = "<% if (entity) { %>  <h2><%= entity.name %>:<%= JSON.stringify(entity.body) %></h2><% } %>";
+  var entityjsfile = ejs.render(str, {entity:entity});
+  console.log(entityjsfile);
   }, this);
+
 
 
