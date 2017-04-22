@@ -15,6 +15,9 @@ const expect = require('chai').expect,
   const input = fs.readFileSync('./test.jdl', 'utf-8').toString();
   const content = parse(input);
 
-  console.log(content);
+
+  content.entities.forEach(function(element) {
+    console.log(element.name);
+  }, this);
 
 
