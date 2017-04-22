@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var program = require('commander')
+const expect = require('chai').expect,
+  fs = require('fs'),
+  fail = expect.fail,
+  core = require('jhipster-core'),
+  parse = core.parse,
+  parseFromFiles = core.parseFromFiles
+
+  const input = fs.readFileSync('./test.jdl', 'utf-8').toString();
+  const content = parse(input);
+
+  console.log(content);
+
+
