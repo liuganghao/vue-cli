@@ -5,7 +5,7 @@
  */
 
 var program = require('commander')
-// var com = require('../lib/meta.js').com
+var com = require('../lib/meta.js')
 var ejs = require('ejs')
 const expect = require('chai').expect,
   fs = require('fs'),
@@ -13,34 +13,7 @@ const expect = require('chai').expect,
   core = require('jhipster-core'),
   parse = core.parse,
   parseFromFiles = core.parseFromFiles
-class com {
-  constructor() {
-    this._mainentity = new mainentity();
 
-  }
-  tojson() {
-    return JSON.stringify(this);
-  }
-  get Name() {
-    return this._name;
-  }
-  set Name(name) {
-    this._name = name;
-  }
-  get mainEntity() {
-    return this._mainentity;
-  }
-
-}
-class mainentity {
-  get Name() {
-    return this._name;
-  }
-  set Name(name) {
-    this._name = name;
-  }
-
-}
 
 const input = fs.readFileSync('./test.jdl', 'utf-8').toString();
 const content = parse(input);
