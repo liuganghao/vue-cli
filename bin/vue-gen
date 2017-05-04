@@ -5,35 +5,193 @@
  */
 
 var program = require('commander')
-var com = require('../lib/meta.js')
-var ejs = require('ejs')
+var meta = require('../lib/meta.js');
+var path = require('path')
+    // var ejs = require('ejs')
 const expect = require('chai').expect,
-  fs = require('fs'),
-  fail = expect.fail,
-  core = require('jhipster-core'),
-  parse = core.parse,
-  parseFromFiles = core.parseFromFiles
+    fs = require('fs'),
+    fail = expect.fail,
+    core = require('jhipster-core'),
+    parse = core.parse,
+    parseFromFiles = core.parseFromFiles
+
+var cwd = process.cwd();
+
+if (fs.existsSync(path.join(cwd, 'dsl'))) cwd = path.join(cwd, 'dsl');
+if (fs.existsSync(path.join(cwd, '../../dsl'))) cwd = path.join(cwd, '../../dsl');
+if (fs.existsSync(path.join(cwd, '../dsl'))) cwd = path.join(cwd, '../dsl');
+
+fs.readdirSync(cwd).forEach((file, index) => {
+    if (file.toLowerCase().endsWith('.jdl') || file.toLowerCase().endsWith('.jh')) {
+        const input = fs.readFileSync(path.join(cwd, file), 'utf-8').toString();
+        try {
+            const content = parse(input);
+            let com = new meta.com();
+            com.code = file.split('.')[0].toLowerCase()
+            com.name = com.code
+                // comcom.mainEntity = {};
+            content.entities.forEach(function(entity) {
+                //console.log("start generate  "+entity.name);
+                if (entity.name.toLowerCase().indexOf("main") == 0) {
+                    com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length).toLowerCase();
+                    com.main.name = entity.javadoc;
+                    entity.body.forEach(p => {
+                        let property = new meta.property();
+                        property.code = p.name;
+                        property.name = p.javadoc;
+                        com.main.propertylist.push(property)
+                    })
+
+                } else if (entity.name.toLowerCase().indexOf("enum") == 0) {
+                    com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
+                } else if (entity.name.toLowerCase() == "statemachine") {
+                    com.statemachine.code = com.code + '_' + entity.name;
+                    com.statemachine.name = entity.javadoc;
+                    entity.body.forEach(p => {
+                        if (p.type.toString().toLowerCase().trim() == 'state' ||
+                            p.type.toString().toLowerCase().trim() == 'startstate' ||
+                            p.type.toString().toLowerCase().trim() == 'endstate') {
+                            let s = new meta.state()
+                            s.code = p.name
+                            s.name = p.javadoc
+                            com.statemachine.statelist.push(s)
+                        }
+                    })
+                } else {
+                    let sub = new meta.subentity();
+                    sub.code = entity.name;
+                    sub.name = entity.javadoc;
+                    com.sublist.push(sub);
+                }
+            }, this);
+
+            var str = `
+//${com.main.name}
+//generated on ${new Date().toLocaleString()}
+export class ${com.main.code} {
+    `
+            com.main.propertylist.forEach((p, index) => {
+                str += `  /**${p.name} */
+    set ${p.code}(_${p.code}) {
+        this._${p.code} = _${p.code}
+    }
+    /**${p.name} */
+    get ${p.code}() {
+        return this._${p.code}
+    }
+`
+            })
+            str += `
+ 
+  constructor() {
+    this.data = {
+`;
+            com.main.propertylist.forEach((p, index) => {
+                if (index == com.main.propertylist.length - 1) str += `${p.code}:''//${p.name}
+                `
+                else str += `${p.code}:'',//${p.name}
+`
+            })
+
+            str += `}
+             this.key = {
+`;
+            com.main.propertylist.forEach((p, index) => {
+                if (index == com.main.propertylist.length - 1) str += `${p.code}:'${p.code}'//${p.name}
+                `
+                else str += `${p.code}:'${p.code}',//${p.name}
+`
+            })
+            str += `}
+             this.desc = {
+`;
+            com.main.propertylist.forEach((p, index) => {
+                if (index == com.main.propertylist.length - 1) str += `${p.code}:'${p.name}'//${p.code}
+                `
+                else str += `${p.code}:'${p.name}',//${p.code}
+`
+            })
+            str += `}}
+    /**
+   * 新增${com.main.name}
+   * @returns {Promise}
+   */
+  create(data) {
+    let data = new window.AV.Object('${com.main.code}');
+    let acl = new window.AV.ACL();
+
+    acl.setPublicReadAccess(true);
+    acl.setPublicWriteAccess(true);
+`
+            com.main.propertylist.forEach(p => {
+                str += `${com.main.code}.set('${p.code}', data.${p.code});//${p.name}
+`
+            })
+
+            str += `   return data.save();
+  }
+
+  /**
+   * 删除${com.main.name}
+   * @param objectId
+   */
+  delete${com.main.code}(objectId) {
+    let ${com.main.code} = window.AV.Object.createWithoutData('${com.main.code}', objectId);
+    return ${com.main.code}.destroy();
+  }
+
+  /**
+   * 更新${com.main.name}
+   * @param price
+   */
+  update${com.main.code}(objectId, ${com.main.code}data) {
+    let ${com.main.code} = window.AV.Object.createWithoutData('${com.main.code}', objectId);
+
+`
+            com.main.propertylist.forEach(p => {
+                str += `${com.main.code}.set('${p.code}', ${com.main.code}data.${p.code});//${p.name}
+`
+            })
+
+            str += `  
+
+    return ${com.main.code}.save();
+  }
+
+  /**
+   * 查询${com.main.name}
+   * @param objectId
+   */
+  query${com.main.code}() {
+    let query = new window.AV.Query('${com.main.code}');
+
+    return query.find();
+  }    
+    
+  }
+`;
+            let targetpath = [path.join(cwd, '../vue/src/components'), path.join(cwd, '../web/src/components')]
+            for (var index = 0; index < targetpath.length; index++) {
+                var p = targetpath[index];
+                if (fs.existsSync(p)) {
+                    if (!fs.existsSync(path.join(p, com.code))) fs.mkdirSync(path.join(p, com.code))
+                    fs.writeFileSync(path.join(path.join(p, com.code), com.code + '.g.js'), str, 'utf-8');
+                    console.log('generate file :' + path.join(path.join(p, com.code), com.code + '.g.js').toString());
+                } else {
+                    fs.writeFileSync(path.join(cwd, com.code + '.g.js'), str, 'utf-8');
+                    console.log('generate file :' + path.join(cwd, com.code + '.g.js').toString());
+                }
+            }
+
+            fs.writeFileSync(path.join(cwd, com.code + '.g.js'), str, 'utf-8');
+            console.log(str);
+        } catch (error) {
+            console.log(file)
+            console.log(JSON.stringify(error))
 
 
-const input = fs.readFileSync('./test.jdl', 'utf-8').toString();
-const content = parse(input);
-//console.log(JSON.stringify(content));
-let metacom = new com();
-// metacom.mainEntity = {};
-content.entities.forEach(function (entity) {
-  //console.log("start generate  "+entity.name);
-if(entity.name == "Task")
-  metacom.mainEntity.Name = entity.name;
-}, this);
+        }
 
-var str = "class <%= metacom.mainEntity.Name %>{";
-// +
-//   "<%for (var index = 0; index < entity.body.length; index++) {" +
-//   "var property = entity.body[index];%>" +
-//   " <%= property.name%>:<%=property.type%> //property" +
-//   "<%}" +
-//   "%>}";
-var entityjsfile = ejs.render(str, { metacom: metacom });
-console.log(entityjsfile);
+    }
 
-
+})

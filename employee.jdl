@@ -1,0 +1,96 @@
+/**员工*/
+entity Main_Employee {
+	/**姓名*/
+    name String required,
+	/**身份证号*/
+    idcard String required,
+	/**邮件*/
+    email String,
+	/**手机*/
+    phone String required,
+    /**入职日期*/
+	hireDate ZonedDateTime,
+	/**薪水*/
+    salary Double,
+    /**性别*/
+    gender Boolean required,
+    /**职位*/
+    title String required,
+    /**头像*/
+    photo ImageBlob,
+    /**籍贯*/
+    birthplace String,
+    /**已婚*/
+    married Boolean
+
+}
+/**教育经历*/
+entity Education {
+    /**毕业学校*/
+    school String,
+    /**学位/学历*/
+    degree String,
+    /**专业*/
+    fieldofstudy String,
+    /**毕业时间*/
+    yearofgraduation Year,
+    /**描述*/
+    description String
+}
+
+/**项目经验*/
+entity Experience {
+    /**职位*/
+    title String,
+    /**公司*/
+    company String,
+    /**从时间*/
+    timefrom YearAndMonth,
+    /**到时间*/
+    timeto YearAndMonth,
+    /**在职*/
+    iscurrnetworkhere Boolean,
+    /**描述*/
+    description String 
+}
+/**员工状态机*/
+entity StateMachine {
+   /**待面试*/
+    tointerview StartState,
+    /**面试通过*/ 
+    interviewpassed State,
+    /**待入职*/ 
+    toentry State,
+    /**试工期*/
+    trial State,
+    /**试用期*/
+    probation State,
+    /**正式员工*/
+    permanent State,
+    /**提出离职*/
+    leaving State,
+    /**已离职*/
+    leaved State,
+    /**关闭*/
+    closed EndState,
+    
+    /**通过*/
+    passed Tointerview_interviewpassed,
+    /**淘汰*/
+    deny Tointerview_closed,
+    /**通知入职*/
+    sendOffer Interviewpassed_toentry,
+    /**入职*/
+    entry Toentry_trial,
+    /**试用*/
+    trial Trial_probation,
+    /**转正*/
+    confirm Probation_permanent,
+    /**提出离职*/
+    quit Permanent_leaving,
+    /**离开*/
+    leave Leaving_leaved,
+    /**关闭*/
+    close Leaved_closed,
+}
+
