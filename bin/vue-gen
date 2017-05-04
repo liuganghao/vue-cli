@@ -5,12 +5,9 @@
  */
 
 var program = require('commander')
-var meta = require('../lib/meta.js');
+var meta = require('../lib/meta.js')
 var path = require('path')
-    // var ejs = require('ejs')
-const expect = require('chai').expect,
-    fs = require('fs'),
-    fail = expect.fail,
+const fs = require('fs'),
     core = require('jhipster-core'),
     parse = core.parse,
     parseFromFiles = core.parseFromFiles
@@ -26,7 +23,7 @@ fs.readdirSync(cwd).forEach((file, index) => {
         const input = fs.readFileSync(path.join(cwd, file), 'utf-8').toString();
         try {
             const content = parse(input);
-            let com = new meta.com();
+            var com = new meta.com();
             com.code = file.split('.')[0].toLowerCase()
             com.name = com.code
                 // comcom.mainEntity = {};
