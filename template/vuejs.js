@@ -60,7 +60,7 @@ function gen_vuejs(com) {
             `
     com.main.propertylist.forEach(p => {
         str += `${com.main.code}.set('${p.code}', data.${p.code});// ${p.name}
-            `
+                    `
     })
 
     str += `   return data.save();

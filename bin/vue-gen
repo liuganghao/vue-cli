@@ -73,10 +73,10 @@ fs.readdirSync(cwd).forEach((file, index) => {
                 if (fs.existsSync(p)) {
                     if (!fs.existsSync(path.join(p, com.code))) fs.mkdirSync(path.join(p, com.code))
                     fs.writeFileSync(path.join(path.join(p, com.code), com.code + '.g.js'), vuejs, 'utf-8');
-                    console.log('generate file :' + path.join(path.join(p, com.code), com.code + '.g.js').tovuejsing());
+                    console.log('generate file :' + path.join(path.join(p, com.code), com.code + '.g.js').toString());
                 } else {
                     fs.writeFileSync(path.join(cwd, com.code + '.g.js'), vuejs, 'utf-8');
-                    console.log('generate file :' + path.join(cwd, com.code + '.g.js').tovuejsing());
+                    console.log('generate file :' + path.join(cwd, com.code + '.g.js').toString());
                 }
             }
         } catch (error) {
