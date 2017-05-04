@@ -7,6 +7,7 @@
 var program = require('commander')
 var meta = require('../lib/meta.js')
 var vuetemp = require('../template/vuejs.js')
+var apitemp = require('../template/apijs.js')
 var path = require('path')
 const fs = require('fs'),
     core = require('jhipster-core'),
@@ -63,16 +64,18 @@ fs.readdirSync(cwd).forEach((file, index) => {
                             s.name = p.javadoc
                             com.statemachine.statelist.push(s)
                             com.statemachine.endstate = s.code
-                        }else {
+                        } else {
                             let t = new meta.transition()
                             t.code = p.name
                             t.name = p.javadoc
                             let fromstr = p.type.split('_')[0].toLowerCase()
                             let tostr = p.type.split('_')[1].toLowerCase()
-                            t.fromstate = com.statemachine.statelist.find(p=>p.code == fromstr).code
-                            t.tostate = com.statemachine.statelist.find(p=>p.code == tostr).code
+                            t.fromstate = com.statemachine.statelist.find(p => p.code == fromstr).code
+                            t.tostate = com.statemachine.statelist.find(p => p.code == tostr).code
                             com.statemachine.transitionlist.push(t)
                         }
+                        if (com.statemachine.startstate == null) com.statemachine.startstate = com.statemachine.statelist[0];
+                        if (com.statemachine.endstate == null) com.statemachine.endstate = com.statemachine.statelist[com.statemachine.statelist.length];
                     })
                 } else {
                     let sub = new meta.subentity()
@@ -88,9 +91,13 @@ fs.readdirSync(cwd).forEach((file, index) => {
                 }
             }, this)
 
-            fs.writeFileSync(path.join(cwd, com.code + '.meta.json'), JSON.stringify(com),'utf-8')
+            fs.writeFileSync(path.join(cwd, com.code + '.meta.json'), JSON.stringify(com), 'utf-8')
 
-            var vuejs = vuetemp.gen_vuejs(com);
+            var vuejs = vuetemp.gen(com);
+            var apijs = apitemp.gen(com)
+            fs.writeFileSync(path.join(cwd, '..', 'express', com.code + '.g.js'), apijs, 'utf-8');
+            console.log('generate file :' + path.join(cwd, '..', 'express', com.code + '.g.js').toString());
+
             let targetpath = [path.join(cwd, '../vue/src/components'), path.join(cwd, '../web/src/components')]
             for (var index = 0; index < targetpath.length; index++) {
                 var p = targetpath[index];

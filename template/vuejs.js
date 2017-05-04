@@ -1,5 +1,8 @@
+
+var meta = require('../lib/meta.js')
 // 生成vuejs
-function gen_vuejs(com) {
+function gen(com) {
+    if (com == null) com = new meta.com()
     let str = `
             // ${com.main.name}
             // generated on ${new Date().toLocaleString()}
@@ -70,7 +73,7 @@ function gen_vuejs(com) {
              * 删除${com.main.name}
              * @param objectId
              */
-            delete${com.main.code}(objectId) {
+            delete(objectId) {
                 let ${com.main.code} = window.AV.Object.createWithoutData('${com.main.code}', objectId);
                 return ${com.main.code}.destroy();
             }
@@ -91,15 +94,74 @@ function gen_vuejs(com) {
              * 查询${com.main.name}
              * @param objectId
              */
-            query${com.main.code}() {
+            query() {
                 let query = new window.AV.Query('${com.main.code}');
 
                 return query.find();
             }    
-                
+`
+    com.statemachine.transitionlist.forEach(t => {
+        str += `
+/* ${t.name} */
+${t.code} (){
+    // todo rpc express api @wyx
+}
+`
+    })
+    str += `
             }
             `;
+    com.sublist.forEach((sub) => {
+        str += `
+            // ${sub.name} 
+            export class ${sub.code} 
+            {`
+        sub.propertylist.forEach((p, index) => {
+            str += `  /* ${p.name} */
+                            set ${p.code}(_${p.code}) {
+                                this._${p.code} = _${p.code}
+                            }
+                            /* ${p.name} */
+                            get ${p.code}() {
+                                return this._${p.code}
+                            }
+                        `
+        })
+        str += `
+            
+            constructor() {
+                this.data = {
+            `;
+        sub.propertylist.forEach((p, index) => {
+            if (index == sub.propertylist.length - 1) str += `${p.code}:''// ${p.name}
+                `
+            else str += `${p.code}:'',// ${p.name}
+`
+        })
+
+        str += `}
+             this.key = {
+`;
+        sub.propertylist.forEach((p, index) => {
+            if (index == sub.propertylist.length - 1) str += `${p.code}:'${p.code}'// ${p.name}
+                `
+            else str += `${p.code}:'${p.code}',// ${p.name}
+`
+        })
+        str += `}
+             this.desc = {
+`;
+        sub.propertylist.forEach((p, index) => {
+            if (index == sub.propertylist.length - 1) str += `${p.code}:'${p.name}'// ${p.code}
+                `
+            else str += `${p.code}:'${p.name}',// ${p.code}
+`
+        })
+        str += `}}}
+            `
+    })
+
     return str;
 }
 
-module.exports.gen_vuejs = gen_vuejs;
+module.exports.gen = gen;
