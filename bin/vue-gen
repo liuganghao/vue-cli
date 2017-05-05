@@ -6,8 +6,6 @@
 
 var program = require('commander')
 var meta = require('../lib/meta.js')
-var vuetemp = require('../template/vuejs.js')
-var apitemp = require('../template/apijs.js')
 var path = require('path')
 const fs = require('fs'),
     core = require('jhipster-core'),
@@ -80,33 +78,28 @@ fs.readdirSync(cwd).forEach((file, index) => {
                 }
             }, this)
 
-            fs.writeFileSync(path.join(cwd, com.code + '.meta.json'), JSON.stringify(com), 'utf-8')
-            console.log('generate file :' + path.join(cwd, com.code + '.meta.json').toString());
-            fs.writeFileSync(path.join(cwd, '..', 'vue', 'src', 'common', 'js', 'front.context.js'), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
-            console.log('copy file :' + path.join(cwd, '..', 'vue', 'src', 'common', 'js', 'front.context.js').toString());
-            fs.writeFileSync(path.join(cwd, '..', 'web', 'src', 'common', 'js', 'front.context.js'), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
-            console.log('copy file :' + path.join(cwd, '..', 'web', 'src', 'common', 'js', 'front.context.js').toString());
-            fs.writeFileSync(path.join(cwd, '..', 'express', 'backend.context.js'), fs.readFileSync(path.join(cwd, '..', 'com', 'backend.context.js')));
-            console.log('copy file :' + path.join(cwd, '..', 'express', 'backend.context.js').toString());
+            fs.writeFileSync(genfilelog(path.join(cwd, com.code + '.meta.json')), JSON.stringify(com), 'utf-8')
+            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'vue', 'src', 'common', 'js', 'front.context.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
+            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'web', 'src', 'common', 'js', 'front.context.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
+            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'express', 'backend.context.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'backend.context.js')));
 
+            let targetpath = path.join(cwd, '..', 'express', com.code);
 
-            var vuejs = vuetemp.gen(com);
-            var apijs = apitemp.gen(com)
-            fs.writeFileSync(path.join(cwd, '..', 'express', com.code + '.g.js'), apijs, 'utf-8');
-            console.log('generate file :' + path.join(cwd, '..', 'express', com.code + '.g.js').toString());
+            if (!fs.existsSync(targetpath)) fs.mkdirSync(targetpath);
+            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.g.js')), require('../template/api_js.js').gen(com), 'utf-8');
+            if (!fs.existsSync(path.join(targetpath, com.code + '.ex.js')))
+                fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.ex.js')), require('../template/api_exjs.js').gen(com), 'utf-8');
 
-            let targetpath = [path.join(cwd, '../vue/src/components'), path.join(cwd, '../web/src/components')]
-            for (var index = 0; index < targetpath.length; index++) {
-                var p = targetpath[index];
-                if (fs.existsSync(p)) {
-                    if (!fs.existsSync(path.join(p, com.code))) fs.mkdirSync(path.join(p, com.code))
-                    fs.writeFileSync(path.join(path.join(p, com.code), com.code + '.g.js'), vuejs, 'utf-8');
-                    console.log('generate file :' + path.join(path.join(p, com.code), com.code + '.g.js').toString());
-                } else {
-                    fs.writeFileSync(path.join(cwd, com.code + '.g.js'), vuejs, 'utf-8');
-                    console.log('generate file :' + path.join(cwd, com.code + '.g.js').toString());
-                }
-            }
+            targetpath = path.join(cwd, '../vue/src/components', com.code);
+            if (!fs.existsSync(path.join(targetpath))) fs.mkdirSync(targetpath);
+            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.g.js')), require('../template/vue_js.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.ex.vue')), require('../template/vue_exvue.js').gen(com), 'utf-8');
+
+            targetpath = path.join(cwd, '../web/src/components', com.code);
+            if (!fs.existsSync(path.join(targetpath))) fs.mkdirSync(targetpath);
+            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.g.js')), require('../template/vue_js.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.ex.vue')), require('../template/web_exvue.js').gen(com), 'utf-8');
+
         } catch (error) {
             console.log(file)
             console.log(JSON.stringify(com))
@@ -114,3 +107,8 @@ fs.readdirSync(cwd).forEach((file, index) => {
         }
     }
 })
+
+function genfilelog(filepath) {
+    console.log('generate file :' + filepath);
+    return filepath;
+}
