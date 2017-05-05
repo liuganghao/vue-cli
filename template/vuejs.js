@@ -3,18 +3,20 @@ var meta = require('../lib/meta.js')
 function gen(com) {
     if (com == null) com = new meta.com()
     let str = `
-            // ${com.main.name}
-            // generated on ${new Date().toLocaleString()}
+    // generated on ${new Date().toLocaleString()}
+    import ctx from 'common/js/front.context.js'
+            /**${com.main.name}*/
             export class ${com.main.code} {
                 `
     com.main.propertylist.forEach((p, index) => {
-        str += `  /* ${p.name} */
+        str += `  
+                /** ${p.name} */
                 set ${p.code}(_${p.code}) {
-                    this._${p.code} = _${p.code}
+                    this._${p.code} = _${p.code};
                 }
-                /* ${p.name} */
+                /** ${p.name} */
                 get ${p.code}() {
-                    return this._${p.code}
+                    return this._${p.code};
                 }`
     })
     str += `constructor() {
@@ -26,7 +28,7 @@ function gen(com) {
         else str += `${p.code}:'',// ${p.name}
 `
     })
-    str += `}
+    str += `};
              this.state = {
 `;
     com.statemachine.statelist.forEach((p, index) => {
@@ -35,7 +37,7 @@ function gen(com) {
         else str += `${p.code}:'${p.val}',// ${p.name}
 `
     })
-    str += `}
+    str += `};
              this.key = {
 `;
     com.main.propertylist.forEach((p, index) => {
@@ -44,7 +46,7 @@ function gen(com) {
         else str += `${p.code}:'${p.code}',// ${p.name}
 `
     })
-    str += `}
+    str += `};
              this.desc = {
 `;
     com.main.propertylist.forEach((p, index) => {
@@ -55,10 +57,11 @@ function gen(com) {
     com.statemachine.statelist.forEach((p, index) => {
         if (index == com.statemachine.statelist.length - 1) str += `${p.code}:'${p.name}'// val=${p.val}
                 `
-        else str += `${p.code}:'${p.name}',// val=${p.val}
+        else str += `state_${p.code}:'${p.name}',// val=${p.val}
 `
     })
-    str += `}}
+    str += `};
+    }
             /** 新增 */
            static create(data) {
                 let data = new window.AV.Object('${com.main.code}');
@@ -102,18 +105,18 @@ function gen(com) {
         str += `
 /* ${t.name} */
 static ${t.code} (id, changedata, callback){
-    if (!id || !changedata) return console.error('参数错误')
+    if (!id || !changedata) return console.error('参数错误');
     const data = {
-      orderId: id,
-      orderChangedata: changedata
-    }
+      objectid: id,
+      changedata: changedata
+    };
     fetch(ctx.apiurl+"/${t.code}", {method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
       .then(results => {
-        return results.json()
+        return results.json();
       })
       .then(data => {
-        callback(data)
-      })
+        callback(data);
+      });
   }
 `
     })
@@ -122,17 +125,17 @@ static ${t.code} (id, changedata, callback){
             `;
     com.sublist.forEach((sub) => {
         str += `
-            // ${sub.name} 
+            /** ${sub.name}*/ 
             export class ${sub.code} 
             {`
         sub.propertylist.forEach((p, index) => {
             str += `  /* ${p.name} */
                             set ${p.code}(_${p.code}) {
-                                this._${p.code} = _${p.code}
+                                this._${p.code} = _${p.code};
                             }
                             /* ${p.name} */
                             get ${p.code}() {
-                                return this._${p.code}
+                                return this._${p.code};
                             } `
         })
         str += `constructor() {
@@ -145,7 +148,7 @@ static ${t.code} (id, changedata, callback){
 `
         })
 
-        str += `}
+        str += `};
              this.key = {
 `;
         sub.propertylist.forEach((p, index) => {
@@ -154,7 +157,7 @@ static ${t.code} (id, changedata, callback){
             else str += `${p.code}:'${p.code}',// ${p.name}
 `
         })
-        str += `}
+        str += `};
              this.desc = {
 `;
         sub.propertylist.forEach((p, index) => {
@@ -163,7 +166,7 @@ static ${t.code} (id, changedata, callback){
             else str += `${p.code}:'${p.name}',// ${p.code}
 `
         })
-        str += `}}}
+        str += `};}}
             `
     })
 
