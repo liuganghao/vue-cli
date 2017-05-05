@@ -18,16 +18,18 @@ class ${com.main.code}base
         else str += `${p.code}:${p.val},// ${p.name}
 `
     })
-    str += `   }
-   
-    this.setapp = (app) => {
-        app.post('/api/${com.main.code}', (req, res, next) => {
-            const objectId = req.body.objectid
-            const changedata = req.body.changedata
+    str += ` }
+    this.setapp = (app) => {`
+    com.statemachine.transitionlist.forEach(t => {
+        str += `   
+        app.post('/api/${com.main.code}/${t.code}', (req, res, next) => {
+            const objectId = req.body.objectid;
+            const changedata = req.body.changedata;
             let entity = AV.Object.createWithoutData('${com.main.code}', objectId);
             for (let key in entity) {
             entity.set(key, changedata[key]);
-            }
+        }
+            ${t.code}(entity);
             entity.save()
             .then(result => {
                 res.json({
@@ -35,11 +37,10 @@ class ${com.main.code}base
                 message: result
                 })
             });
-        }) 
-    }
-}
-
+        }); 
 `
+    })
+    str += `}}`
     com.statemachine.transitionlist.forEach(t => {
         str += `
 /* ${t.name} */
@@ -49,7 +50,8 @@ class ${com.main.code}base
   }
 `
     })
-    str += `}
+    str += `
+}
 module.exports = ${com.main.code}base
             `
 

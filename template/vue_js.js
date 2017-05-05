@@ -104,10 +104,9 @@ static ${t.code} (id, changedata, callback){
     if (!id ) return console.error('参数错误');
     const data = {
       objectid: id,
-      changedata: changedata,
-      transition:'${t.code}'
+      changedata: changedata
     };
-    fetch(ctx.apiurl+"/${t.code}", {method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
+    fetch(ctx.apiurl+"/${t.code}/${t.code}", {method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
       .then(results => {
         return results.json();
       })
