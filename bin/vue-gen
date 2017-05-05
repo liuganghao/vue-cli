@@ -81,6 +81,7 @@ fs.readdirSync(cwd).forEach((file, index) => {
             }, this)
 
             fs.writeFileSync(path.join(cwd, com.code + '.meta.json'), JSON.stringify(com), 'utf-8')
+            fs.writeFileSync(path.join(cwd, '..', 'vue', 'src', 'com', 'js', 'front.context.js'), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
 
             var vuejs = vuetemp.gen(com);
             var apijs = apitemp.gen(com)
