@@ -103,9 +103,21 @@ function gen(com) {
     com.statemachine.transitionlist.forEach(t => {
         str += `
 /* ${t.name} */
-static ${t.code} (){
+static ${t.code} (id, changedata, callback){
     // todo rpc express api @wyx
-}
+    if (!id || !changedata) return console.error('参数错误')
+    const data = {
+      orderId: id,
+      orderChangedata: changedata
+    }
+    fetch(‘http://localhost:3000/api/${t.code}’, {method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
+      .then(results => {
+        return results.json()
+      })
+      .then(data => {
+        callback(data)
+      })
+  }
 `
     })
     str += `
