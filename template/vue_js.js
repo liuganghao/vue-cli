@@ -11,13 +11,9 @@ function gen(com) {
     com.main.propertylist.forEach((p, index) => {
         str += `  
                 /** ${p.name} */
-                set ${p.code}(_${p.code}) {
-                    this._${p.code} = _${p.code};
-                }
+                set ${p.code}(_${p.code}) {this._${p.code} = _${p.code};}
                 /** ${p.name} */
-                get ${p.code}() {
-                    return this._${p.code};
-                }`
+                get ${p.code}() {return this._${p.code};}`
     })
     str += `constructor() {
                 this.data = {
@@ -32,9 +28,9 @@ function gen(com) {
              this.state = {
 `;
     com.statemachine.statelist.forEach((p, index) => {
-        if (index == com.statemachine.statelist.length - 1) str += `${p.code}:'${p.val}'// ${p.name}
+        if (index == com.statemachine.statelist.length - 1) str += `${p.code}:${p.val}// ${p.name}
                 `
-        else str += `${p.code}:'${p.val}',// ${p.name}
+        else str += `${p.code}:${p.val},// ${p.name}
 `
     })
     str += `};
@@ -55,7 +51,7 @@ function gen(com) {
     })
 
     com.statemachine.statelist.forEach((p, index) => {
-        if (index == com.statemachine.statelist.length - 1) str += `${p.code}:'${p.name}'// val=${p.val}
+        if (index == com.statemachine.statelist.length - 1) str += `state_${p.code}:'${p.name}'// val=${p.val}
                 `
         else str += `state_${p.code}:'${p.name}',// val=${p.val}
 `
@@ -64,18 +60,18 @@ function gen(com) {
     }
             /** 新增 */
            static create(data) {
-                let data = new window.AV.Object('${com.main.code}');
+                let entity = new window.AV.Object('${com.main.code}');
                 let acl = new window.AV.ACL();
 
                 acl.setPublicReadAccess(true);
                 acl.setPublicWriteAccess(true);
             `
     com.main.propertylist.forEach(p => {
-        str += `${com.main.code}.set('${p.code}', data.${p.code});// ${p.name}
+        str += `entity.set('${p.code}', data.${p.code});// ${p.name}
                     `
     })
 
-    str += `   return data.save();
+    str += `   return entity.save();
             }
 
             /** 删除*/
@@ -105,10 +101,11 @@ function gen(com) {
         str += `
 /* ${t.name} */
 static ${t.code} (id, changedata, callback){
-    if (!id || !changedata) return console.error('参数错误');
+    if (!id ) return console.error('参数错误');
     const data = {
       objectid: id,
-      changedata: changedata
+      changedata: changedata,
+      transition:'${t.code}'
     };
     fetch(ctx.apiurl+"/${t.code}", {method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
       .then(results => {
@@ -129,14 +126,11 @@ static ${t.code} (id, changedata, callback){
             export class ${sub.code} 
             {`
         sub.propertylist.forEach((p, index) => {
-            str += `  /* ${p.name} */
-                            set ${p.code}(_${p.code}) {
-                                this._${p.code} = _${p.code};
-                            }
-                            /* ${p.name} */
-                            get ${p.code}() {
-                                return this._${p.code};
-                            } `
+            str += `  
+            /* ${p.name} */
+            set ${p.code}(_${p.code}) {this._${p.code} = _${p.code};}
+            /* ${p.name} */
+            get ${p.code}() { return this._${p.code};} `
         })
         str += `constructor() {
                 this.data = {
