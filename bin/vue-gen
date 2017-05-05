@@ -81,7 +81,14 @@ fs.readdirSync(cwd).forEach((file, index) => {
             }, this)
 
             fs.writeFileSync(path.join(cwd, com.code + '.meta.json'), JSON.stringify(com), 'utf-8')
-            fs.writeFileSync(path.join(cwd, '..', 'vue', 'src', 'com', 'js', 'front.context.js'), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
+            console.log('generate file :' + path.join(cwd, com.code + '.meta.json').toString());
+            fs.writeFileSync(path.join(cwd, '..', 'vue', 'src', 'common', 'js', 'front.context.js'), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
+            console.log('copy file :' + path.join(cwd, '..', 'vue', 'src', 'common', 'js', 'front.context.js').toString());
+            fs.writeFileSync(path.join(cwd, '..', 'web', 'src', 'common', 'js', 'front.context.js'), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
+            console.log('copy file :' + path.join(cwd, '..', 'web', 'src', 'common', 'js', 'front.context.js').toString());
+            fs.writeFileSync(path.join(cwd, '..', 'express', 'backend.context.js'), fs.readFileSync(path.join(cwd, '..', 'com', 'backend.context.js')));
+            console.log('copy file :' + path.join(cwd, '..', 'express', 'backend.context.js').toString());
+
 
             var vuejs = vuetemp.gen(com);
             var apijs = apitemp.gen(com)
