@@ -159,7 +159,8 @@ static ${t.code} (id, changedata, callback){
             else str += `${p.code}:'${p.name}', // ${p.code}
 `
         })
-        str += `};}}`
+        str += `};}}
+        `
     })
 
     return str;
