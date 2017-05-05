@@ -6,10 +6,18 @@ function gen(com) {
     const ${com.main.code}base = require('./${com.main.code}.g')
 
     class ${com.main.code} extends ${com.main.code}base {
-
-    }
-
-    module.exports = ${com.main.code}`
+    `
+    com.statemachine.transitionlist.forEach(t => {
+        str += `
+/* ${t.name} */
+ ${t.code} (entity)
+ {
+  }
+`
+    })
+    str += `}
+module.exports = ${com.main.code}
+            `
     return str
 }
 
