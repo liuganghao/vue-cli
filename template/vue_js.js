@@ -121,7 +121,7 @@ static ${t.code} (id, changedata, callback){
             `;
     com.sublist.forEach((sub) => {
         str += `
-            /** ${sub.name}*/ 
+            /** ${sub.name} */ 
             export class ${sub.code} 
             {`
         sub.propertylist.forEach((p, index) => {
@@ -159,8 +159,7 @@ static ${t.code} (id, changedata, callback){
             else str += `${p.code}:'${p.name}', // ${p.code}
 `
         })
-        str += `};}}
-            `
+        str += `};}}`
     })
 
     return str;
