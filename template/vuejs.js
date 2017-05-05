@@ -54,7 +54,7 @@ function gen(com) {
              * 新增${com.main.name}
              * @returns {Promise}
              */
-            create(data) {
+           static create(data) {
                 let data = new window.AV.Object('${com.main.code}');
                 let acl = new window.AV.ACL();
 
@@ -73,7 +73,7 @@ function gen(com) {
              * 删除${com.main.name}
              * @param objectId
              */
-            delete(objectId) {
+           static delete(objectId) {
                 let ${com.main.code} = window.AV.Object.createWithoutData('${com.main.code}', objectId);
                 return ${com.main.code}.destroy();
             }
@@ -81,7 +81,7 @@ function gen(com) {
             /**
              * 更新${com.main.name}
              */
-            update(objectId, changedata) {
+           static update(objectId, changedata) {
                 let entity = window.AV.Object.createWithoutData('${com.main.code}', objectId);
                 for (let key in entity) {
                     entity.set(key, changedata[key]);
@@ -94,7 +94,7 @@ function gen(com) {
              * 查询${com.main.name}
              * @param objectId
              */
-            query() {
+           static query() {
                 let query = new window.AV.Query('${com.main.code}');
 
                 return query.find();
@@ -103,7 +103,7 @@ function gen(com) {
     com.statemachine.transitionlist.forEach(t => {
         str += `
 /* ${t.name} */
-${t.code} (){
+static ${t.code} (){
     // todo rpc express api @wyx
 }
 `
