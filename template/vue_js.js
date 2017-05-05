@@ -6,7 +6,7 @@ function gen(com) {
     // generated on ${new Date().toLocaleString()}
     import ctx from 'common/js/front.context.js'
             /**${com.main.name}*/
-            export class ${com.main.code} {
+            export default class ${com.main.code} {
                 `
     com.main.propertylist.forEach((p, index) => {
         str += `  
@@ -106,7 +106,7 @@ static ${t.code} (id, changedata, callback){
       objectid: id,
       changedata: changedata
     };
-    fetch(ctx.apiurl+"/${t.code}/${t.code}", {method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
+    fetch(ctx.apiurl+"/${com.main.code}/${t.code}", {method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
       .then(results => {
         return results.json();
       })
