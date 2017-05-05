@@ -25,13 +25,13 @@ fs.readdirSync(cwd).forEach((file, index) => {
         try {
             const content = parse(input)
             var com = new meta.com()
-            com.code = file.split('.')[0].toLowerCase()
+            com.code = file.split('.')[0]
             com.name = com.code
                 // comcom.mainEntity = {};
             content.entities.forEach(function(entity) {
                 //console.log("start generate  "+entity.name);
                 if (entity.name.trim().toLowerCase().indexOf("main") == 0) {
-                    com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length).toLowerCase();
+                    com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
                     com.main.name = entity.javadoc
                     entity.body.forEach(p => {
                         let property = new meta.property()
@@ -42,7 +42,7 @@ fs.readdirSync(cwd).forEach((file, index) => {
                 } else if (entity.name.trim().toLowerCase().indexOf("enum") == 0) {
                     com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
                 } else if (entity.name.trim().toLowerCase() == "statemachine") {
-                    com.statemachine.code = com.code + '_' + entity.name.trim().toLowerCase()
+                    com.statemachine.code = com.code + '_' + entity.name.trim()
                     com.statemachine.name = entity.javadoc
                     entity.body.forEach(p => {
                         if (p.type.toString().toLowerCase().trim().startsWith('state')) {
@@ -66,7 +66,7 @@ fs.readdirSync(cwd).forEach((file, index) => {
                     })
                 } else {
                     let sub = new meta.subentity()
-                    sub.code = entity.name.trim().toLowerCase()
+                    sub.code = entity.name.trim()
                     sub.name = entity.javadoc
                     entity.body.forEach(p => {
                         let property = new meta.property()
