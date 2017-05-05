@@ -1,7 +1,7 @@
 function gen(com) {
     let str = `  
-            // ${com.main.name}
-            // generated on ${new Date().toLocaleString()}
+             // ${com.main.name}
+             // generated on ${new Date().toLocaleString()}
             const AV = require('leancloud-storage')
 
 class ${com.main.code}base 
@@ -13,9 +13,9 @@ class ${com.main.code}base
     this.state = {
 `;
     com.statemachine.statelist.forEach((p, index) => {
-        if (index == com.statemachine.statelist.length - 1) str += `${p.code}:${p.val}// ${p.name}
+        if (index == com.statemachine.statelist.length - 1) str += `${p.code}:${p.val} // ${p.name}
                 `
-        else str += `${p.code}:${p.val},// ${p.name}
+        else str += `${p.code}:${p.val}, // ${p.name}
 `
     })
     str += ` }

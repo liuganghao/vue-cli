@@ -3,9 +3,9 @@ var meta = require('../lib/meta.js')
 function gen(com) {
     if (com == null) com = new meta.com()
     let str = `
-    // generated on ${new Date().toLocaleString()}
-    import ctx from 'common/js/front.context.js'
-            /**${com.main.name}*/
+     // generated on ${new Date().toLocaleString()}
+    import ctx from 'common/js/front.context.js';
+            /** ${com.main.name} */
             export default class ${com.main.code} {
                 `
     com.main.propertylist.forEach((p, index) => {
@@ -19,41 +19,41 @@ function gen(com) {
                 this.data = {
             `;
     com.main.propertylist.forEach((p, index) => {
-        if (index == com.main.propertylist.length - 1) str += `${p.code}:''// ${p.name}
+        if (index == com.main.propertylist.length - 1) str += `${p.code}:'' // ${p.name}
                 `
-        else str += `${p.code}:'',// ${p.name}
+        else str += `${p.code}:'', // ${p.name}
 `
     })
     str += `};
              this.state = {
 `;
     com.statemachine.statelist.forEach((p, index) => {
-        if (index == com.statemachine.statelist.length - 1) str += `${p.code}:${p.val}// ${p.name}
+        if (index == com.statemachine.statelist.length - 1) str += `${p.code}:${p.val} // ${p.name}
                 `
-        else str += `${p.code}:${p.val},// ${p.name}
+        else str += `${p.code}:${p.val}, // ${p.name}
 `
     })
     str += `};
              this.key = {
 `;
     com.main.propertylist.forEach((p, index) => {
-        if (index == com.main.propertylist.length - 1) str += `${p.code}:'${p.code}'// ${p.name}
+        if (index == com.main.propertylist.length - 1) str += `${p.code}:'${p.code}' // ${p.name}
                 `
-        else str += `${p.code}:'${p.code}',// ${p.name}
+        else str += `${p.code}:'${p.code}', // ${p.name}
 `
     })
     str += `};
              this.desc = {
 `;
     com.main.propertylist.forEach((p, index) => {
-        str += `${p.code}:'${p.name}',// ${p.code}
+        str += `${p.code}:'${p.name}', // ${p.code}
 `
     })
 
     com.statemachine.statelist.forEach((p, index) => {
-        if (index == com.statemachine.statelist.length - 1) str += `state_${p.code}:'${p.name}'// val=${p.val}
+        if (index == com.statemachine.statelist.length - 1) str += `state_${p.code}:'${p.name}' // val=${p.val}
                 `
-        else str += `state_${p.code}:'${p.name}',// val=${p.val}
+        else str += `state_${p.code}:'${p.name}', // val=${p.val}
 `
     })
     str += `};
@@ -67,20 +67,20 @@ function gen(com) {
                 acl.setPublicWriteAccess(true);
             `
     com.main.propertylist.forEach(p => {
-        str += `entity.set('${p.code}', data.${p.code});// ${p.name}
+        str += `entity.set('${p.code}', data.${p.code}); // ${p.name}
                     `
     })
 
     str += `   return entity.save();
             }
 
-            /** 删除*/
+            /** 删除 */
            static delete(objectId) {
                 let ${com.main.code} = window.AV.Object.createWithoutData('${com.main.code}', objectId);
                 return ${com.main.code}.destroy();
             }
 
-            /** 更新*/
+            /** 更新 */
            static update(objectId, changedata) {
                 let entity = window.AV.Object.createWithoutData('${com.main.code}', objectId);
                 for (let key in entity) {
@@ -90,7 +90,7 @@ function gen(com) {
                 return entity.save();
             }
 
-           /** 查询*/
+           /** 查询 */
            static query() {
                 let query = new window.AV.Query('${com.main.code}');
 
@@ -106,7 +106,7 @@ static ${t.code} (id, changedata, callback){
       objectid: id,
       changedata: changedata
     };
-    fetch(ctx.apiurl+"/${com.main.code}/${t.code}", {method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
+    fetch(ctx.apiurl+'/${com.main.code}/${t.code}', {method: 'POST', body: JSON.stringify(data), headers: {'Content-Type': 'application/json'}})
       .then(results => {
         return results.json();
       })
@@ -135,9 +135,9 @@ static ${t.code} (id, changedata, callback){
                 this.data = {
             `;
         sub.propertylist.forEach((p, index) => {
-            if (index == sub.propertylist.length - 1) str += `${p.code}:''// ${p.name}
+            if (index == sub.propertylist.length - 1) str += `${p.code}:'' // ${p.name}
                 `
-            else str += `${p.code}:'',// ${p.name}
+            else str += `${p.code}:'', // ${p.name}
 `
         })
 
@@ -145,18 +145,18 @@ static ${t.code} (id, changedata, callback){
              this.key = {
 `;
         sub.propertylist.forEach((p, index) => {
-            if (index == sub.propertylist.length - 1) str += `${p.code}:'${p.code}'// ${p.name}
+            if (index == sub.propertylist.length - 1) str += `${p.code}:'${p.code}' // ${p.name}
                 `
-            else str += `${p.code}:'${p.code}',// ${p.name}
+            else str += `${p.code}:'${p.code}', // ${p.name}
 `
         })
         str += `};
              this.desc = {
 `;
         sub.propertylist.forEach((p, index) => {
-            if (index == sub.propertylist.length - 1) str += `${p.code}:'${p.name}'// ${p.code}
+            if (index == sub.propertylist.length - 1) str += `${p.code}:'${p.name}' // ${p.code}
                 `
-            else str += `${p.code}:'${p.name}',// ${p.code}
+            else str += `${p.code}:'${p.name}', // ${p.code}
 `
         })
         str += `};}}
