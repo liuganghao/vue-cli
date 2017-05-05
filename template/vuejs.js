@@ -1,6 +1,5 @@
-
 var meta = require('../lib/meta.js')
-// 生成vuejs
+    // 生成vuejs
 function gen(com) {
     if (com == null) com = new meta.com()
     let str = `
@@ -16,12 +15,9 @@ function gen(com) {
                 /* ${p.name} */
                 get ${p.code}() {
                     return this._${p.code}
-                }
-            `
+                }`
     })
-    str += `
-            
-            constructor() {
+    str += `constructor() {
                 this.data = {
             `;
     com.main.propertylist.forEach((p, index) => {
@@ -30,7 +26,15 @@ function gen(com) {
         else str += `${p.code}:'',// ${p.name}
 `
     })
-
+    str += `}
+             this.state = {
+`;
+    com.statemachine.statelist.forEach((p, index) => {
+        if (index == com.statemachine.statelist.length - 1) str += `${p.code}:'${p.val}'// ${p.name}
+                `
+        else str += `${p.code}:'${p.val}',// ${p.name}
+`
+    })
     str += `}
              this.key = {
 `;
@@ -44,16 +48,18 @@ function gen(com) {
              this.desc = {
 `;
     com.main.propertylist.forEach((p, index) => {
-        if (index == com.main.propertylist.length - 1) str += `${p.code}:'${p.name}'// ${p.code}
+        str += `${p.code}:'${p.name}',// ${p.code}
+`
+    })
+
+    com.statemachine.statelist.forEach((p, index) => {
+        if (index == com.statemachine.statelist.length - 1) str += `${p.code}:'${p.name}'// val=${p.val}
                 `
-        else str += `${p.code}:'${p.name}',// ${p.code}
+        else str += `${p.code}:'${p.name}',// val=${p.val}
 `
     })
     str += `}}
-                /**
-             * 新增${com.main.name}
-             * @returns {Promise}
-             */
+            /** 新增 */
            static create(data) {
                 let data = new window.AV.Object('${com.main.code}');
                 let acl = new window.AV.ACL();
@@ -69,18 +75,13 @@ function gen(com) {
     str += `   return data.save();
             }
 
-            /**
-             * 删除${com.main.name}
-             * @param objectId
-             */
+            /** 删除*/
            static delete(objectId) {
                 let ${com.main.code} = window.AV.Object.createWithoutData('${com.main.code}', objectId);
                 return ${com.main.code}.destroy();
             }
 
-            /**
-             * 更新${com.main.name}
-             */
+            /** 更新*/
            static update(objectId, changedata) {
                 let entity = window.AV.Object.createWithoutData('${com.main.code}', objectId);
                 for (let key in entity) {
@@ -90,10 +91,7 @@ function gen(com) {
                 return entity.save();
             }
 
-            /**
-             * 查询${com.main.name}
-             * @param objectId
-             */
+           /** 查询*/
            static query() {
                 let query = new window.AV.Query('${com.main.code}');
 
@@ -104,13 +102,12 @@ function gen(com) {
         str += `
 /* ${t.name} */
 static ${t.code} (id, changedata, callback){
-    // todo rpc express api @wyx
     if (!id || !changedata) return console.error('参数错误')
     const data = {
       orderId: id,
       orderChangedata: changedata
     }
-    fetch(‘http://localhost:3000/api/${t.code}’, {method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
+    fetch(ctx.apiurl+"/${t.code}", {method: 'POST', body: JSON.stringify(data), headers: {"Content-Type": "application/json"}})
       .then(results => {
         return results.json()
       })
@@ -136,12 +133,9 @@ static ${t.code} (id, changedata, callback){
                             /* ${p.name} */
                             get ${p.code}() {
                                 return this._${p.code}
-                            }
-                        `
+                            } `
         })
-        str += `
-            
-            constructor() {
+        str += `constructor() {
                 this.data = {
             `;
         sub.propertylist.forEach((p, index) => {

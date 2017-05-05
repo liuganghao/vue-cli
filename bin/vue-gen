@@ -29,8 +29,8 @@ fs.readdirSync(cwd).forEach((file, index) => {
             var com = new meta.com()
             com.code = file.split('.')[0].toLowerCase()
             com.name = com.code
-            // comcom.mainEntity = {};
-            content.entities.forEach(function (entity) {
+                // comcom.mainEntity = {};
+            content.entities.forEach(function(entity) {
                 //console.log("start generate  "+entity.name);
                 if (entity.name.trim().toLowerCase().indexOf("main") == 0) {
                     com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length).toLowerCase();
@@ -47,23 +47,12 @@ fs.readdirSync(cwd).forEach((file, index) => {
                     com.statemachine.code = com.code + '_' + entity.name.trim().toLowerCase()
                     com.statemachine.name = entity.javadoc
                     entity.body.forEach(p => {
-                        if (p.type.toString().toLowerCase().trim() == 'state') {
+                        if (p.type.toString().toLowerCase().trim().startsWith('state')) {
                             let s = new meta.state()
                             s.code = p.name
                             s.name = p.javadoc
+                            s.val = p.type.trim().toLowerCase().replace('state', '')
                             com.statemachine.statelist.push(s)
-                        } else if (p.type.toString().toLowerCase().trim() == 'startstate') {
-                            let s = new meta.state()
-                            s.code = p.name
-                            s.name = p.javadoc
-                            com.statemachine.statelist.push(s)
-                            com.statemachine.startstate = s.code
-                        } else if (p.type.toString().toLowerCase().trim() == 'endstate') {
-                            let s = new meta.state()
-                            s.code = p.name.trim().toLowerCase()
-                            s.name = p.javadoc
-                            com.statemachine.statelist.push(s)
-                            com.statemachine.endstate = s.code
                         } else {
                             let t = new meta.transition()
                             t.code = p.name

@@ -56,23 +56,23 @@ entity Experience {
 /**员工状态机*/
 entity StateMachine {
    /**待面试*/
-    tointerview StartState,
+    tointerview State1,
     /**面试通过*/ 
-    interviewpassed State,
+    interviewpassed State2,
     /**待入职*/ 
-    toentry State,
+    toentry State3,
     /**试工期*/
-    trial State,
+    trial State4,
     /**试用期*/
-    probation State,
+    probation State5,
     /**正式员工*/
-    permanent State,
+    permanent State6,
     /**提出离职*/
-    leaving State,
+    leaving State7,
     /**已离职*/
-    leaved State,
+    leaved State8,
     /**关闭*/
-    closed EndState,
+    closed State9,
     
     /**通过*/
     passed Tointerview_interviewpassed,
