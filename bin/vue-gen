@@ -129,16 +129,16 @@ fs.readdirSync(cwd).forEach((file, index) => {
 
             targetpath = path.join(cwd, '../vue/src/components', com.code);
             if (!fs.existsSync(path.join(targetpath))) fs.mkdirSync(targetpath);
-            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.g.js')), require('../template/vue_js.js').gen(com), 'utf-8');
-            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.g.vue')), require('../template/edit_mobile_vue.js').gen(com), 'utf-8');
-            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.g.vue')), require('../template/list_mobile_vue.js').gen(com), 'utf-8');
-            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.g.vue')), require('../template/ref_mobile_vue.js').gen(com), 'utf-8');
-            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.g.vue')), require('../template/view_mobile_vue.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, 'model' + '.g.js')), require('../template/vue_js.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, 'edit' + '.g.vue')), require('../template/edit_mobile_vue.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, 'list' + '.g.vue')), require('../template/list_mobile_vue.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, 'ref' + '.g.vue')), require('../template/ref_mobile_vue.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, 'view'+ '.g.vue')), require('../template/view_mobile_vue.js').gen(com), 'utf-8');
 
             targetpath = path.join(cwd, '../web/src/components', com.code);
             if (!fs.existsSync(path.join(targetpath))) fs.mkdirSync(targetpath);
-            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.g.js')), require('../template/vue_js.js').gen(com), 'utf-8');
-            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.ex.vue')), require('../template/list_web_vue.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, 'model.g.js')), require('../template/vue_js.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, 'list.g.vue')), require('../template/list_web_vue.js').gen(com), 'utf-8');
 
         } catch (error) {
             console.log(file)
