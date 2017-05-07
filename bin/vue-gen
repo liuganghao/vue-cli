@@ -27,8 +27,8 @@ fs.readdirSync(cwd).forEach((file, index) => {
             var com = new meta.com()
             com.code = file.split('.')[0]
             com.name = com.code
-                // comcom.mainEntity = {};
-            content.entities.forEach(function(entity) {
+            // comcom.mainEntity = {};
+            content.entities.forEach(function (entity) {
                 //console.log("start generate  "+entity.name);
                 if (entity.name.trim().toLowerCase().indexOf("main") == 0) {
                     com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
@@ -39,7 +39,14 @@ fs.readdirSync(cwd).forEach((file, index) => {
                         property.name = p.javadoc
                         com.main.propertylist.push(property)
                     })
-                } else if (entity.name.trim().toLowerCase().indexOf("enum") == 0) {
+                } else if (entity.name.trim().toLowerCase().startsWith("sub")) {
+                    com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
+                    com.main.name = entity.javadoc;
+                }else if (entity.name.trim().toLowerCase().startsWith("cross43 ")) {
+                    com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
+                    com.main.name = entity.javadoc;
+                }
+                else if (entity.name.trim().toLowerCase().indexOf("enum") == 0) {
                     com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
                 } else if (entity.name.trim().toLowerCase() == "statemachine") {
                     com.statemachine.code = com.code + '_' + entity.name.trim()
@@ -79,9 +86,9 @@ fs.readdirSync(cwd).forEach((file, index) => {
             }, this)
 
             fs.writeFileSync(genfilelog(path.join(cwd, com.code + '.meta.json')), JSON.stringify(com), 'utf-8')
-            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'vue', 'src', 'common', 'js', 'front.context.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
-            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'web', 'src', 'common', 'js', 'front.context.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
-            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'express', 'backend.context.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'backend.context.js')));
+            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'vue', 'src', 'common', 'js', 'front.context.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.g.js')));
+            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'web', 'src', 'common', 'js', 'front.context.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.g.js')));
+            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'express', 'backend.context.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'backend.context.g.js')));
 
             let targetpath = path.join(cwd, '..', 'express', com.code);
 
