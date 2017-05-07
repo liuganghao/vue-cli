@@ -30,24 +30,62 @@ fs.readdirSync(cwd).forEach((file, index) => {
             // comcom.mainEntity = {};
             content.entities.forEach(function (entity) {
                 //console.log("start generate  "+entity.name);
-                if (entity.name.trim().toLowerCase().indexOf("main") == 0) {
-                    com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
-                    com.main.name = entity.javadoc
+                if (entity.name.trim().toLowerCase().startsWith("doc")) {
+                    com.main = new meta.doc();
+                    setmainentity(com, entity);
+                    let p1 = new meta.property()
+                    p1.code = 'code';
+                    p1.name = '编码';
+                    com.main.propertylist.push(p1);
+                    let p2 = new meta.property()
+                    p2.code = 'name';
+                    p2.name = '名称';
+                    com.main.propertylist.push(p2);
+                } else if (entity.name.trim().toLowerCase().startsWith("order")) {
+                    com.main = new meta.order();
+                    setmainentity(com, entity);
+                    let p1 = new meta.property()
+                    p1.code = 'orderno';
+                    p1.name = '单号';
+                    com.main.propertylist.push(p1);
+                } else if (entity.name.trim().toLowerCase().startsWith("cross")) {
+                    let cross = new meta.cross()
+                    cross.code = entity.name.trim()
+                    cross.name = entity.javadoc
                     entity.body.forEach(p => {
                         let property = new meta.property()
                         property.code = p.name
                         property.name = p.javadoc
-                        com.main.propertylist.push(property)
+                        sub.propertylist.push(property)
                     })
-                } else if (entity.name.trim().toLowerCase().startsWith("sub")) {
-                    com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
-                    com.main.name = entity.javadoc;
-                }else if (entity.name.trim().toLowerCase().startsWith("cross43 ")) {
-                    com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
-                    com.main.name = entity.javadoc;
+                    let p1 = new meta.property()
+                    p1.code = 'front'
+                    p1.name = '上游实体'
+                    cross.propertylist.push(p1)
+                    let p2 = new meta.property()
+                    p2.code = 'backend'
+                    p2.name = '下游实体'
+                    cross.propertylist.push(p2)
+                    com.crosslist.push(cross)
+                }
+                else if (entity.name.trim().toLowerCase().startsWith("sub")) {
+                    let sub = new meta.sub()
+                    sub.code = entity.name.trim()
+                    sub.name = entity.javadoc
+                    entity.body.forEach(p => {
+                        let property = new meta.property()
+                        property.code = p.name
+                        property.name = p.javadoc
+                        sub.propertylist.push(property)
+                    })
+                    let property = new meta.property()
+                    property.code = 'lineno'
+                    property.name = '行号'
+                    sub.propertylist.push(property)
+                    com.sublist.push(sub);
                 }
                 else if (entity.name.trim().toLowerCase().indexOf("enum") == 0) {
-                    com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
+
                 } else if (entity.name.trim().toLowerCase() == "statemachine") {
                     com.statemachine.code = com.code + '_' + entity.name.trim()
                     com.statemachine.name = entity.javadoc
@@ -72,23 +110,15 @@ fs.readdirSync(cwd).forEach((file, index) => {
                         if (com.statemachine.endstate == null) com.statemachine.endstate = com.statemachine.statelist[com.statemachine.statelist.length];
                     })
                 } else {
-                    let sub = new meta.subentity()
-                    sub.code = entity.name.trim()
-                    sub.name = entity.javadoc
-                    entity.body.forEach(p => {
-                        let property = new meta.property()
-                        property.code = p.name
-                        property.name = p.javadoc
-                        sub.propertylist.push(property)
-                    })
-                    com.sublist.push(sub)
+                    console.error('entity命名错误 :' + entity.name);
+                    throw new Error('异常退出');
                 }
             }, this)
 
             fs.writeFileSync(genfilelog(path.join(cwd, com.code + '.meta.json')), JSON.stringify(com), 'utf-8')
-            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'vue', 'src', 'common', 'js', 'front.context.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.g.js')));
-            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'web', 'src', 'common', 'js', 'front.context.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.g.js')));
-            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'express', 'backend.context.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'backend.context.g.js')));
+            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'vue', 'src', 'common', 'js', 'front.context.g.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
+            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'web', 'src', 'common', 'js', 'front.context.g.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
+            fs.writeFileSync(genfilelog(path.join(cwd, '..', 'express', 'backend.context.g.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'backend.context.js')));
 
             let targetpath = path.join(cwd, '..', 'express', com.code);
 
@@ -118,4 +148,16 @@ fs.readdirSync(cwd).forEach((file, index) => {
 function genfilelog(filepath) {
     console.log('generate file :' + filepath);
     return filepath;
+}
+
+function setmainentity(com, entity) {
+    com.main.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
+    com.main.name = entity.javadoc
+    entity.body.forEach(p => {
+        let property = new meta.property()
+        property.code = p.name
+        property.name = p.javadoc
+        com.main.propertylist.push(property)
+    })
+
 }
