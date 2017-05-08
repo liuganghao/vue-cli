@@ -27,8 +27,8 @@ fs.readdirSync(cwd).forEach((file, index) => {
             var com = new meta.com()
             com.code = file.split('.')[0]
             com.name = com.code
-                // comcom.mainEntity = {};
-            content.entities.forEach(function(entity) {
+            // comcom.mainEntity = {};
+            content.entities.forEach(function (entity) {
                 //console.log("start generate  "+entity.name);
                 if (entity.name.trim().toLowerCase().startsWith("doc")) {
                     com.main = new meta.doc();
@@ -140,16 +140,18 @@ fs.readdirSync(cwd).forEach((file, index) => {
 
             targetpath = path.join(cwd, '../vue/src/components', com.code);
             if (!fs.existsSync(path.join(targetpath))) fs.mkdirSync(targetpath);
-            fs.writeFileSync(genfilelog(path.join(targetpath, 'model' + '.g.js')), require('../template/vue_js.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, 'entity' + '.g.js')), require('../template/vue_entity.js').gen(com), 'utf-8');
             fs.writeFileSync(genfilelog(path.join(targetpath, 'edit' + '.g.vue')), require('../template/edit_mobile_vue.js').gen(com), 'utf-8');
             fs.writeFileSync(genfilelog(path.join(targetpath, 'list' + '.g.vue')), require('../template/list_mobile_vue.js').gen(com), 'utf-8');
             fs.writeFileSync(genfilelog(path.join(targetpath, 'ref' + '.g.vue')), require('../template/ref_mobile_vue.js').gen(com), 'utf-8');
             fs.writeFileSync(genfilelog(path.join(targetpath, 'view' + '.g.vue')), require('../template/view_mobile_vue.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, 'model.g.js')), require('../template/vue_uimodel.js').gen(com), 'utf-8');
 
             targetpath = path.join(cwd, '../web/src/components', com.code);
             if (!fs.existsSync(path.join(targetpath))) fs.mkdirSync(targetpath);
-            fs.writeFileSync(genfilelog(path.join(targetpath, 'model.g.js')), require('../template/vue_js.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, 'entity.g.js')), require('../template/vue_entity.js').gen(com), 'utf-8');
             fs.writeFileSync(genfilelog(path.join(targetpath, 'list.g.vue')), require('../template/list_web_vue.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, 'model.g.js')), require('../template/vue_uimodel.js').gen(com), 'utf-8');
 
         } catch (error) {
             console.log(file)

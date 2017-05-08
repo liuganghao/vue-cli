@@ -2,7 +2,7 @@ function gen(com) {
     let str = `  
              // ${com.main.name}
              // generated on ${new Date().toLocaleString()}
-            const AV = require('leanengine')
+            var AV = require('leanengine')
 `
     str += `
     var state = {

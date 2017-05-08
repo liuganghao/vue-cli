@@ -2,8 +2,8 @@ function gen(com) {
     let str = `  
     // ${com.main.name}
     // generated on ${new Date().toLocaleString()}
-    const AV = require('leanengine')
-    const ${com.main.code}base = require('./${com.main.code.toLowerCase()}.g')
+    var AV = require('leanengine')
+    var ${com.main.code}base = require('./${com.main.code.toLowerCase()}.g')
 
     class ${com.main.code} extends ${com.main.code}base {
         // 不能加构造方法
