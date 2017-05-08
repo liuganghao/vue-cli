@@ -7,7 +7,18 @@ function gen(com) {
     import ctx from 'common/js/front.context.js';
     /** ${com.main.name} */
     export default class ${com.main.code} {
-                `
+        constructor(){`
+        com.sublist.forEach((sub)=>{
+        str+= `
+        this._${sub.code.toLowerCase()}list = new Array();`
+        })
+    str+=`
+        }`
+  com.sublist.forEach((p)=>{
+        str+= `
+        /** ${p.name} */
+        get ${p.code.toLowerCase()}list() {return this._${p.code.toLowerCase()}list;}`
+        })
     com.main.propertylist.forEach((p, index) => {
         str += `  
         /** ${p.name} */
