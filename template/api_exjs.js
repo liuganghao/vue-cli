@@ -11,11 +11,11 @@ function gen(com) {
     com.statemachine.transitionlist.forEach(t => {
         str += `
 /* ${t.name} */
- ${t.code} (request, response)
+/* ${t.code} (request, response)
  {
       return super.passed(request, response);
   }
-`
+*/`
     })
     str += `}
 module.exports = ${com.main.code}
