@@ -162,6 +162,45 @@ static ${t.code} (id, changedata, callback){
         str += `};}}
         `
     })
+    com.enumlist.forEach((e) => {
+        str += `
+    /** ${e.name} */
+    export class enum_${e.code} {
+    constructor() {
+        this.desc = {
+            `
+        e.literallist.forEach((p, index) => {
+            if (index == e.literallist.length - 1) str += `${p.code}:'${p.name}' // val=${p.val}
+                `
+            else str += `state_${p.code}:'${p.name}', // val=${p.val}
+                `
+        })
+        str += `
+        };
+
+        this.key = {`
+        e.literallist.forEach((p, index) => {
+            if (index == e.literallist.length - 1) str += `${p.code}:'${p.code}' // val=${p.val} name=${p.name} 
+                `
+            else str += `${p.code}:'${p.code}', // val=${p.val} name=${p.name} 
+                `
+        })
+        str += `
+        };
+
+        this.desc = {`
+        e.literallist.forEach((p, index) => {
+            if (index == e.literallist.length - 1) str += `${p.code}:'${p.name}' // val=${p.val}
+                `
+            else str += `${p.code}:'${p.name}', // val=${p.val}
+                `
+        })
+        str += `
+        };
+    }
+}
+    `
+    });
 
     return str;
 }

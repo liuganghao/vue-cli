@@ -27,8 +27,8 @@ fs.readdirSync(cwd).forEach((file, index) => {
             var com = new meta.com()
             com.code = file.split('.')[0]
             com.name = com.code
-            // comcom.mainEntity = {};
-            content.entities.forEach(function (entity) {
+                // comcom.mainEntity = {};
+            content.entities.forEach(function(entity) {
                 //console.log("start generate  "+entity.name);
                 if (entity.name.trim().toLowerCase().startsWith("doc")) {
                     com.main = new meta.doc();
@@ -67,10 +67,9 @@ fs.readdirSync(cwd).forEach((file, index) => {
                     p2.name = '下游实体'
                     cross.propertylist.push(p2)
                     com.crosslist.push(cross)
-                }
-                else if (entity.name.trim().toLowerCase().startsWith("sub")) {
+                } else if (entity.name.trim().toLowerCase().startsWith("sub")) {
                     let sub = new meta.sub()
-                    sub.code = entity.name.trim()
+                    sub.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
                     sub.name = entity.javadoc
                     entity.body.forEach(p => {
                         let property = new meta.property()
@@ -83,12 +82,23 @@ fs.readdirSync(cwd).forEach((file, index) => {
                     property.name = '行号'
                     sub.propertylist.push(property)
                     com.sublist.push(sub);
-                }
-                else if (entity.name.trim().toLowerCase().indexOf("enum") == 0) {
-
+                } else if (entity.name.trim().toLowerCase().startsWith("enum")) {
+                    let enumeration = new meta.enumeration();
+                    enumeration.code = entity.name.substr(entity.name.indexOf('_') + 1, entity.name.length);
+                    enumeration.name = entity.javadoc;
+                    entity.body.forEach(p => {
+                        if (p.type.toString().toLowerCase().trim().startsWith('literal')) {
+                            let s = new meta.literal()
+                            s.code = p.name
+                            s.name = p.javadoc
+                            s.val = p.type.trim().toLowerCase().replace('literal', '')
+                            enumeration.literallist.push(s)
+                        }
+                    });
+                    com.enumlist.push(enumeration);
                 } else if (entity.name.trim().toLowerCase() == "statemachine") {
-                    com.statemachine.code = com.code + '_' + entity.name.trim()
-                    com.statemachine.name = entity.javadoc
+                    com.statemachine.code = com.code + '_' + entity.name.trim();
+                    com.statemachine.name = entity.javadoc;
                     entity.body.forEach(p => {
                         if (p.type.toString().toLowerCase().trim().startsWith('state')) {
                             let s = new meta.state()
@@ -133,7 +143,7 @@ fs.readdirSync(cwd).forEach((file, index) => {
             fs.writeFileSync(genfilelog(path.join(targetpath, 'edit' + '.g.vue')), require('../template/edit_mobile_vue.js').gen(com), 'utf-8');
             fs.writeFileSync(genfilelog(path.join(targetpath, 'list' + '.g.vue')), require('../template/list_mobile_vue.js').gen(com), 'utf-8');
             fs.writeFileSync(genfilelog(path.join(targetpath, 'ref' + '.g.vue')), require('../template/ref_mobile_vue.js').gen(com), 'utf-8');
-            fs.writeFileSync(genfilelog(path.join(targetpath, 'view'+ '.g.vue')), require('../template/view_mobile_vue.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, 'view' + '.g.vue')), require('../template/view_mobile_vue.js').gen(com), 'utf-8');
 
             targetpath = path.join(cwd, '../web/src/components', com.code);
             if (!fs.existsSync(path.join(targetpath))) fs.mkdirSync(targetpath);
