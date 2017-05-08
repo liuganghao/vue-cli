@@ -134,6 +134,7 @@ fs.readdirSync(cwd).forEach((file, index) => {
 
             if (!fs.existsSync(targetpath)) fs.mkdirSync(targetpath);
             fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.g.js')), require('../template/api_js.js').gen(com), 'utf-8');
+            fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.es5.g.js')), require('../template/api_es5.js').gen(com), 'utf-8');
             if (!fs.existsSync(path.join(targetpath, com.code + '.ex.js')))
                 fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.ex.js')), require('../template/api_exjs.js').gen(com), 'utf-8');
 

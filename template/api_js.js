@@ -3,14 +3,9 @@ function gen(com) {
              // ${com.main.name}
              // generated on ${new Date().toLocaleString()}
             const AV = require('leancloud-storage')
-
-class ${com.main.code}base 
-{
-    constructor() 
-    {
 `
     str += `
-    this.state = {
+    var state = {
 `;
     com.statemachine.statelist.forEach((p, index) => {
         if (index == com.statemachine.statelist.length - 1) str += `${p.code}:${p.val} // ${p.name}
@@ -18,35 +13,29 @@ class ${com.main.code}base
         else str += `${p.code}:${p.val}, // ${p.name}
 `
     })
-    str += ` }
-    this.setapp = (app) => {`
-    com.statemachine.transitionlist.forEach(t => {
-        str += `   
-        app.post('/api/${com.main.code}/${t.code}', (req, res, next) => {
-            const objectId = req.body.objectid;
-            const changedata = req.body.changedata;
-            let entity = AV.Object.createWithoutData('${com.main.code}', objectId);
-            for (let key in entity) {
-            entity.set(key, changedata[key]);
-        }
-            ${t.code}(entity);
-            entity.save()
-            .then(result => {
-                res.json({
-                code: 200,
-                message: result
-                })
-            });
-        }); 
-`
-    })
-    str += `}}`
+    str += `}
+class ${com.main.code}base 
+{
+    `
     com.statemachine.transitionlist.forEach(t => {
         str += `
 /* ${t.name} */
  ${t.code} (entity)
  {
-  entity.set('state', this.state.${t.tostate});
+        var changedata = request.params.changedata;
+        var entity = AV.Object.createWithoutData('${com.main.code}', request.params.objectId);
+        var key = '';
+        for (key in changedata) {
+            entity.set(key, changedata[key]);
+        }
+        entity.set('state', state.${t.tostate})
+        return entity.save()
+            .then(function(result) {
+                return response.success(entity.toJSON())
+            })
+            .catch(function(error) {
+                throw new AV.Cloud.Error('请求失败')
+            })
   }
 `
     })
