@@ -20,7 +20,7 @@ class ${com.main.code}base
     com.statemachine.transitionlist.forEach(t => {
         str += `
 /* ${t.name} */
- ${t.code} (entity)
+ ${t.code} (request, response)
  {
         var changedata = request.params.changedata;
         var entity = AV.Object.createWithoutData('${com.main.code}', request.params.objectId);

@@ -11,7 +11,7 @@ function gen(com) {
     com.statemachine.transitionlist.forEach(t => {
         str += `
 /* ${t.name} */
- ${t.code} (entity)
+ ${t.code} (request, response)
  {
       return super.passed(request, response);
   }
