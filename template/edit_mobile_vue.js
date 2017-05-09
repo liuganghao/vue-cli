@@ -1,5 +1,5 @@
-function gen(com) {
-    let str = `  // ${com.main.name}
+function gen(com, entity) {
+    let str = `  // ${entity.name}
             // generated on ${new Date().toLocaleString()}`
 
     return str
