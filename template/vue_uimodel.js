@@ -99,9 +99,9 @@ function gen(com) {
 
         this.key = {`
         e.literallist.forEach((p, index) => {
-            if (index == e.literallist.length - 1) str += `${p.code}:'${p.code}' // val=${p.val} name=${p.name} 
+            if (index == e.literallist.length - 1) str += `${p.code}:'${p.code}' // val=${p.val} name=${p.name}
                 `
-            else str += `${p.code}:'${p.code}', // val=${p.val} name=${p.name} 
+            else str += `${p.code}:'${p.code}', // val=${p.val} name=${p.name}
                 `
         })
         str += `
