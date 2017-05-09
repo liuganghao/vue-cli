@@ -3,7 +3,7 @@ function gen(com) {
 // ${com.main.name}
 // generated on ${new Date().toLocaleString()}
 var AV = require('leanengine')
-var ${com.main.code.toLowerCase()} = require('./${com.main.code.toLowerCase()}.ex')
+var ${com.main.code.toLowerCase()} = require('./${com.code.toLowerCase()}.ex')
 
 /* 保存之前 */
 AV.Cloud.beforeSave('${com.main.code}', function(request) {

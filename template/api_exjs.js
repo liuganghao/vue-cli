@@ -3,7 +3,7 @@ function gen(com) {
 // ${com.main.name}
 // generated on ${new Date().toLocaleString()}
 var AV = require('leanengine')
-var ${com.main.code}base = require('./${com.main.code.toLowerCase()}.g')
+var ${com.main.code}base = require('./${com.code.toLowerCase()}.g')
 
 class ${com.main.code} extends ${com.main.code}base 
 {
