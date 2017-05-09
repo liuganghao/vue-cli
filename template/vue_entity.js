@@ -4,7 +4,7 @@ function gen(com) {
     if (com == null) com = new meta.com()
     let str = `
      // generated on ${new Date().toLocaleString()}
-    import ctx from 'common/js/front.context.js';
+    import ctx from '../../common/js/front.context.js';
     /** ${com.main.name} */
     export default class ${com.main.code} {
         constructor(){`

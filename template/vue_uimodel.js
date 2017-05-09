@@ -4,7 +4,7 @@ function gen(com) {
     if (com == null) com = new meta.com()
     let str = `
      // generated on ${new Date().toLocaleString()}
-    export class uimodel_${com.main.code}{
+    export class UIModel${com.main.code}{
     constructor() {
                 this.data = {
             `;
@@ -52,7 +52,7 @@ function gen(com) {
 `
     com.sublist.forEach((sub) => {
         str += `
- export class uimodel_${sub.code}{
+ export class UIModel${sub.code}{
     constructor() {
                 this.data = {
             `;

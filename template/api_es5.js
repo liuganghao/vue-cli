@@ -3,7 +3,7 @@ function gen(com) {
 // ${com.main.name}
 // generated on ${new Date().toLocaleString()}
 var AV = require('leanengine')
-var ${com.main.code.toLowerCase()} = require('./${com.main.code.toLowerCase()}.g')
+var ${com.main.code.toLowerCase()} = require('./${com.main.code.toLowerCase()}.ex')
 
 AV.Cloud.beforeUpdate('Employee', function(request) {
 var entity = request.object;
