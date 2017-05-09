@@ -84,7 +84,7 @@ function gen(com) {
     });com.enumlist.forEach((e) => {
         str += `
     /** ${e.name} */
-    export class enum_${e.code} {
+    export class Enum${e.code} {
     constructor() {
         this.val = {
             `
