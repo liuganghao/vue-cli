@@ -30,7 +30,7 @@ function gen(com) {
         /** 新增 */
     static create(changedata) {
         let entity = new window.AV.Object('${com.main.code}');
-        for (let key in entity) {
+        for (let key in changedata) {
         entity.set(key, changedata[key]);
         }
         return entity.save();
@@ -45,7 +45,7 @@ function gen(com) {
     /** 更新 */
     static update(objectId, changedata) {
         let entity = window.AV.Object.createWithoutData('${com.main.code}', objectId);
-        for (let key in entity) {
+        for (let key in changedata) {
             entity.set(key, changedata[key]);
         }
 
