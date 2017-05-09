@@ -130,7 +130,7 @@ fs.readdirSync(cwd).forEach((file, index) => {
             fs.writeFileSync(genfilelog(path.join(cwd, '..', 'web', 'src', 'common', 'js', 'front.context.g.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'front.context.js')));
             fs.writeFileSync(genfilelog(path.join(cwd, '..', 'express', 'backend.context.g.js')), fs.readFileSync(path.join(cwd, '..', 'com', 'backend.context.js')));
 
-            let targetpath = path.join(cwd, '..', 'express', com.code);
+            let targetpath = path.join(cwd, '..', 'express','components', com.code);
 
             if (!fs.existsSync(targetpath)) fs.mkdirSync(targetpath);
             fs.writeFileSync(genfilelog(path.join(targetpath, com.code + '.g.js')), require('../template/api_js.js').gen(com), 'utf-8');
