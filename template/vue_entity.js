@@ -1,5 +1,5 @@
 var meta = require('../lib/meta.js')
-// 生成vuejs
+    // 生成vuejs
 function gen(com) {
     if (com == null) com = new meta.com()
     let str = `
@@ -7,17 +7,17 @@ function gen(com) {
     /** ${com.main.name} */
     export default class ${com.main.code} {
         constructor(){`
-        com.sublist.forEach((sub)=>{
-        str+= `
+    com.sublist.forEach((sub) => {
+        str += `
         this._${sub.code.toLowerCase()}list = [];`
-        })
-    str+=`
+    })
+    str += `
         }`
-  com.sublist.forEach((p)=>{
-        str+= `
+    com.sublist.forEach((p) => {
+        str += `
         /** ${p.name} */
         get ${p.code.toLowerCase()}list() {return this._${p.code.toLowerCase()}list;}`
-        })
+    })
     com.main.propertylist.forEach((p, index) => {
         str += `  
         /** ${p.name} */
@@ -57,8 +57,8 @@ function gen(com) {
 
         return query.find();
     }
-    static getbyid(id){
-
+    static getbyid(objectId){
+     return new window.AV.Query(objectId).get(objectId);
     }
 `
     com.statemachine.transitionlist.forEach(t => {
@@ -87,11 +87,11 @@ function gen(com) {
             /* ${p.name} */
             get ${p.code}() { return this._${p.code};} `
         })
-       
+
         str += `}
         `
     })
-    
+
 
     return str;
 }
