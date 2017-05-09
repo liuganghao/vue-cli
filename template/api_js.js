@@ -16,6 +16,18 @@ function gen(com) {
     str += `}
 class ${com.main.code}base 
 {
+    /* 保存之前 */
+    beforeSave(request) {}
+    /* 保存之后 */
+    afterSave(request) {}
+    /* 更新之前 */
+    beforeUpdate(request) {}
+    /* 更新之后 */
+    afterUpdate(request) {}
+    /* 删除之前 */
+    beforeDelete(request) {}
+    /* 删除之后 */
+    afterDelete(request) {}
     `
     com.statemachine.transitionlist.forEach(t => {
         str += `
