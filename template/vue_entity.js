@@ -9,7 +9,7 @@ function gen(com) {
         constructor(){`
         com.sublist.forEach((sub)=>{
         str+= `
-        this._${sub.code.toLowerCase()}list = new Array();`
+        this._${sub.code.toLowerCase()}list = [];`
         })
     str+=`
         }`
