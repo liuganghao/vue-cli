@@ -66,7 +66,9 @@ function gen(com) {
     /** ${t.name} */
     static ${t.code} (id, changedata){
     if (!id) return console.error('参数错误');
-        return window.AV.Cloud.run('${com.main.code}_${t.code}', changedata);
+    if(changedata)changedata={};
+    changedata.objectId=id;
+    return window.AV.Cloud.run('${com.main.code}_${t.code}', changedata);
     }
 `
     })
