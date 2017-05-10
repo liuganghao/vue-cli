@@ -19,7 +19,24 @@ class ${com.main.code}base
     /* 保存之前 */
     beforeSave(request) {}
     /* 保存之后 */
-    afterSave(request) {}
+    afterSave(request) {
+        const roleQuery = new AV.Query(AV.Role);
+        roleQuery.equalTo('name', 'admin');
+        roleQuery.find()
+            .then(adminRole => {
+                let roleAcl = new AV.ACL();
+                roleAcl.setPublicReadAccess(false);
+                roleAcl.setPublicWriteAccess(false);
+                roleAcl.setReadAccess(request.currentUser, true);
+                roleAcl.setWriteAccess(request.currentUser, true);
+                if (adminRole) {
+                roleAcl.setRoleReadAccess(adminRole[0], true);
+                roleAcl.setRoleWriteAccess(adminRole[0], true);
+                request.object.setACL(roleAcl);
+                }
+                request.object.save();
+            });
+    }
     /* 更新之前 */
     beforeUpdate(request) {}
     /* 更新之后 */
