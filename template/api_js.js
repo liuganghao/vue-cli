@@ -29,11 +29,11 @@ class ${com.main.code}base
                 roleAcl.setPublicWriteAccess(false);
                 roleAcl.setReadAccess(request.currentUser, true);
                 roleAcl.setWriteAccess(request.currentUser, true);
-                if (!adminRole) {
+                //if (!adminRole) {
                 roleAcl.setRoleReadAccess(adminRole[0], true);
                 roleAcl.setRoleWriteAccess(adminRole[0], true);
                 request.object.setACL(roleAcl);
-                }
+                //}
                 request.object.save();
             });
     }
