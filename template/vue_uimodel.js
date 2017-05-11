@@ -54,36 +54,36 @@ function gen(com) {
         str += `
  export class UIModel${sub.code}{
     constructor() {
-                this.data = {
+        this.data = {
             `;
         sub.propertylist.forEach((p, index) => {
-            if (index == sub.propertylist.length - 1) str += `${p.code}:'' // ${p.name}
+            if (index == sub.propertylist.length - 1) str += `       ${p.code}:'' // ${p.name}
                 `
-            else str += `${p.code}:'', // ${p.name}
+            else str += `       ${p.code}:'', // ${p.name}
 `
         })
         str += `};
              this.key = {
 `;
         sub.propertylist.forEach((p, index) => {
-            if (index == sub.propertylist.length - 1) str += `${p.code}:'${p.code}' // ${p.name}
+            if (index == sub.propertylist.length - 1) str += `      ${p.code}:'${p.code}' // ${p.name}
                 `
-            else str += `${p.code}:'${p.code}', // ${p.name}
+            else str += `       ${p.code}:'${p.code}', // ${p.name}
 `
         })
         str += `};
              this.desc = {
 `;
         sub.propertylist.forEach((p, index) => {
-            if (index == sub.propertylist.length - 1) str += `${p.code}:'${p.name}' // ${p.code}
+            if (index == sub.propertylist.length - 1) str += `      ${p.code}:'${p.name}' // ${p.code}
                 `
-            else str += `${p.code}:'${p.name}', // ${p.code}
+            else str += `       ${p.code}:'${p.name}', // ${p.code}
 `
         })
         str += `};}}`
-    });com.enumlist.forEach((e) => {
-        str += `
-    /** ${e.name} */
+    });
+    com.enumlist.forEach((e) => {
+        str += `/** ${e.name} */
     export class Enum${e.code} {
     constructor() {
         this.val = {
@@ -94,28 +94,27 @@ function gen(com) {
             else str += `${p.code}:${p.val}, // val=${p.name}
                 `
         })
-        str += `
-        };
+        str += `};
 
-        this.key = {`
+        this.key = {
+            `
         e.literallist.forEach((p, index) => {
             if (index == e.literallist.length - 1) str += `${p.code}:'${p.code}' // val=${p.val} name=${p.name}
                 `
             else str += `${p.code}:'${p.code}', // val=${p.val} name=${p.name}
                 `
         })
-        str += `
-        };
+        str += `};
 
-        this.desc = {`
+        this.desc = {
+            `
         e.literallist.forEach((p, index) => {
             if (index == e.literallist.length - 1) str += `${p.code}:'${p.name}' // val=${p.val}
                 `
             else str += `${p.code}:'${p.name}', // val=${p.val}
                 `
         })
-        str += `
-        };
+        str += `};
     }
 }
     `
