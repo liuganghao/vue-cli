@@ -26,31 +26,19 @@ function gen(com) {
         get ${p.code}() {return this._${p.code};}`
     })
     str += `
-        /** 新增 */
-    static create(changedata) {
-        let entity = new window.AV.Object('${com.main.code}');
-        for (let key in changedata) {
-        entity.set(key, changedata[key]);
-        }
-        return entity.save();
-    }
-
     /** 删除 */
     static delete(objectId) {
         let ${com.main.code} = window.AV.Object.createWithoutData('${com.main.code}', objectId);
         return ${com.main.code}.destroy();
     }
-
     /** 更新 */
-    static update(objectId, changedata) {
+    static updateOrCreate(changedata, objectId) {
         let entity = window.AV.Object.createWithoutData('${com.main.code}', objectId);
         for (let key in changedata) {
-            entity.set(key, changedata[key]);
+        entity.set(key, changedata[key]);
         }
-
         return entity.save();
     }
-
     /** 查询 */
     static query() {
         let query = new window.AV.Query('${com.main.code}');
